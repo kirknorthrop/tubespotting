@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2"></script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>The sciencey bit</h1>
+					<img src="1f687.svg" style="width: 30%; height: 30%; border: none; box-shadow: none; background: none;">
+					<p>Kirk Northrop</p>
+
+					<aside class="notes">
+						<p>And now it's time for the sciencey bit.</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Disclaimer</h2>
+
+					<p>I'm not a data scientist</p>
+					<p>I didn't do maths after A-Level</p>
+					<p>Please feel free to get in touch!</p>
+
+					<aside class="notes">
+						<p>First off, a quick disclaimer</p>
+
+						<p>I'm not a data scientist. I have no background in big data or graph theory or machine learning or anything like that.</p>
+
+						<p>I didn't do maths after A-Level. Therefore I may have missed something magically easy.</p>
+
+						<p>Therefore, please feel free to email me if you want to tell me some things to research. I'm very happy to listen, discuss and learn!</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>How the tube challenge sees it</h2>
+
+					<p>Roding Valley</p>
+					<p>King's Cross St. Pancras</p>
+
+					<aside class="notes">
+						<p>So, Geoff's just talked about the tube challenge from a participants persepctive, but let's look at it from a systems perspective.</p>
+
+						<p>The tube challenge sees every station as having the same weight. You get as much credit for an unused backwater like Roding Valley as you do going through a busy, multi-line hub such as King's Cross.</p>
+
+						<p>Now, in some ways this is good, because it means we can try and avoid the big busy stations as much as we can. But regardless of that, I always seem to find myself going through King's Cross many times during a tube challenge. But you'd still think it's an easy problem to solve...</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<blockquote>"Surely it's just the travelling salesman problem?"</blockquote>
+
+					<aside class="notes">
+						<p>Surely it's just the travelling salesman problem? After all, we're trying to work out a path between lots of different nodes, all connected via specific edges, and we only want to visit each node once.</p>
+
+						<p>And ultimately the answer is: yes, it probably can be solved with some messy variant of travelling salesman, after we've modelled all of the constraints.</p>
+
+						<p>The problem is modelling those constraints. For example, King's Cross isn't just one node, it's actually a collection of platform nodes contained within the station node.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>How the network sees it</h2>
+					<p class="fragment"><img src="roding valley network.svg" style="background: transparent; border: none; box-shadow: none; vertical-align: middle; padding-right: 1em;">Roding Valley</p>
+					<p class="fragment" style="padding-top: 1em;"><img src="kxx network.svg" style="background: transparent; border: none; box-shadow: none; vertical-align: middle; padding-right: 1em;">King's Cross St. Pancras</p>
+
+					<aside class="notes">
+						<p>So let's have a look at how the network sees it.</p>
+
+						<p>At Roding Valley there's... the Central line... and some fields.</p>
+
+						<p>On the other hand, everything goes through King's Cross. There's six tube lines - or four given that the sub surface lines are all joined up, and four different rail lines which can't be completely ignored as they are a legal way to move between stations.</p>
+
+						<p>So somehow we have to reconcile that huge mess at King's Cross with the reality that it is worth no more than a station in the middle of nowhere.</p>
+
+						<p>And that's where we also have to consider how a human sees the stations.</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>How a human sees it</h2>
+					<h3>Roding Valley</h3>
+					<img src="ROD_3D.png" style="border: none; box-shadow: none; width: 100%; height: 100%;">
+
+					<aside class="notes">
+						So here's Roding Valley, as drawn by Geoff. Now it's actually not the simplest station on the network, there are some single platform ones, but it will do for now.
+					</aside>
+				</section>
+
+				<section>
+					<h2>How a human sees it</h2>
+					<h3>King's Cross St. Pancras</h3>
+					<img src="kxx plan.png" style="border: none; box-shadow: none; width: 80%; height: 80%;">
+
+					<aside class="notes">
+						<p>And here's part of King's Cross St. Pancras. This diagram is missing at least one of the ticket halls.</p>
+
+						<p>There's another problem too. The computer sees King's Cross as a node with many edges. Which makes it seem like a brilliant place to change trains. And if changing between any pair of lines at King's Cross had no cost, then that would be great.</p>
+
+						<p>But the problem is, it has a huge cost in changing lines, it's busy, all the platforms are miles away from each other, changing between the Northern and Victoria becomes a major mission, and you could never use Thameslink as part of a challenge without losing a huge bunch of time.</p>
+
+						<p>And that's where you realise that things start to get a little complicated, and you have to start thinking about the distance between the platforms as well as the distance between stations.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Timetables</h2>
+					<img src="hainault loop.svg" style="background-color: white; border-width: 10px;">
+
+					<aside class="notes">
+						<p>Because then we have the problem of timetables to worry about too. The travelling salesman doesn't have to worry about timetables in his Mondeo, he just has to know not to go on the South Circular very often.</p>
+
+						<p>We have to be very worried about timetables. For example, the Hainault Loop, up at the top of the Central Line. Now we have to go up to Epping, but also go round the loop. Now as the map shows you, it's not possible to go round the loop and then up to Epping on the same train, so there are two services here:</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Woodford via Hainault</h2>
+					<img src="hainault loop WOO.svg" style="background-color: white; border-width: 10px;">
+
+					<aside class="notes">
+						Woodford via Hainault
+					</aside>
+				</section>
+
+				<section>
+					<h2>Epping</h2>
+					<img src="hainault loop EPP.svg" style="background-color: white; border-width: 10px;">
+
+					<aside class="notes">
+						and the Epping service.
+					</aside>
+				</section>
+
+				<section>
+					<h2>Timetables</h2>
+					<img src="hainault loop.svg" style="background-color: white; border-width: 10px;">
+
+					<aside class="notes">
+						So Woodford becomes an important location, as it's where the two services intersect.
+					</aside>
+				</section>
+
+				<section>
+					<h2>Timetables</h2>
+					<img src="woodford from hainault.png " style="background-color: white; border-width: 10px;">
+					<img src="woodford to epping.png " style="background-color: white; border-width: 10px;">
+
+					<aside class="notes">
+						<p>But there's even more to it than that. Let's look at the timetables for Woodford.</p>
+
+						<p>On the left is the train that goes round the loop. It has lots of letters in the middle of the times - these are places where the train arrives significantly earlier than it departs. A wait of 'capital H' is 4½ minutes. It arrives at Woodford 1 minute early at 11:38¼. So the likelihood is that this train will be on time, and perhaps even early.</p>
+
+						<p>On the right is the train up to Epping. This has only had two half minute rests in its entire journey from West Ruislip, and has just come through Central London. So this train might be running a little late.</p>
+
+						<p>And because of the rests and the fact the train up to Epping is due to leave just 30 seconds before the train from the loop is due to arrive, you can see that a human might think...</p>
+					</aside>
+				</section>
+
+				<section>
+					<blockquote>
+						"Yes the underground has a timetable but at the end of a long journey things can get messed up"
+					</blockquote>
+
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<blockquote>
+						"I know that Woodford isn't very big, and it's a simple run over the bridge to get onto the Epping train"
+					</blockquote>
+
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<blockquote>
+						"The next train is five minutes behind, so if we miss it it's not too bad, and if we make it, then we'll be ahead!"
+					</blockquote>
+
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<p>Let's assume we're sticking to the timetable...</p>
+
+					<aside class="notes">
+						But for now, let's assume the timetable is correct. And to be fair, even during the peak hours, even on the Victoria line when there is a seemingly endless torrent of trains, it sticks to it...
+					</aside>
+				</section>
+
+				<section>
+					<h2>"Quite Well"</h2>
+
+					<aside class="notes">
+						But the amazing thing is, even when there is are severe delays (NEXT SLIDE)
+					</aside>
+				</section>
+
+				<section>
+					<h2>"Good Service"</h2>
+
+					<aside class="notes">
+						they can still get things back on track.
+					</aside>
+				</section>
+
+				<section>
+					<img src="IMG_4544.jpg">
+
+					<aside class="notes">
+						<p>This is because every train has a number - you can see for example that this A stock is number 712 - and this tells the driver what to follow on the timetable.</p>
+
+						<p>So it's possible to "reform" the service by telling the train operator to follow a different set number, based on where it is after the delays.</p>
+
+						<p>So therefore we can plot a route saying we're going to get this train on this trip from this station at this time, and be reasonably sure that the rest of the network will revolve around us.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h1>WARNING</h1>
+
+					<h2>Timetable data</h2>
+
+					<aside class="notes">
+						<p>Now for those of you who have never dealt with timetable data, this is a quick warning - it's generally horrible.</p>
+
+						<p>The National Rail data isn't too bad, but it's stuck in the 1970s as a text file containing fixed length strings you have to parse.</p>
+
+						<p>Not very modern, but it works well enough, and the different data entities fit together well.</p>
+
+						<p>For tube data... well let's have a look at</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Three signs of easy-to-use data</h2>
+
+
+						<p class="fragment">XML format</p>
+						<p class="fragment">Designed by the Government</p>
+						<p class="fragment">via outsourcers</p>
+
+					<aside class="notes">
+						<p>The three signs of easy-to-use data</p>
+
+						<p>It's an XML format. Designed by the Government. Via outsourcers</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2 style="font-variant: small-caps; text-transform: none;">TransXChange</h2>
+					<blockquote>An XML Standard for the Data Exchange of Bus Schedules and Related Information.</blockquote>
+
+					<aside class="notes">
+						<p>And it's called TransXChange - and it is provided by the Department for Transport to cover basically any possible public transportation service that could possibly exist anywhere in the UK.</p>
+
+						<p>TfL provide a download of all the Bus, Tube, DLR and everything else timetables for those of us interested in London.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2 style="font-variant: small-caps; text-transform: none;">TransXChange</h2>
+					<img src="high level transxchange.png">
+
+					<aside class="notes">
+						<p>So this is a very high level UML diagram that's included in the 290 page spec document.</p>
+
+						<p>Now this doesn't look too bad. However, every possible journey is broken up into many many entities.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2 style="font-variant: small-caps; text-transform: none;">TransXChange</h2>
+					<p class="fragment">A Route is made of multiple RouteSections</p>
+					<p class="fragment">Then there's a JourneyPattern</p>
+					<p class="fragment">That's made up of JourneyPatternSections</p>
+					<p class="fragment">Which have no relationship to Routes or RouteSections</p>
+					<p class="fragment">But a JourneyPattern DOES link to a Route</p>
+					<p class="fragment">Then there's a Service</p>
+					<p class="fragment">Made up of JourneyPatterns</p>
+					<p class="fragment">And VehicleJourneys, which is effectively an instance of a JourneyPattern</p>
+
+
+				</section>
+
+				<section>
+					<h2 style="font-variant: small-caps; text-transform: none;">TransXChange</h2>
+					<blockquote class="fragment">"Actually, it's not that bad once you're used to it."</p>
+
+					<aside class="notes">
+						<p>Now I'm being slightly facetious - it's "Actually, it's not that bad once you're used to it."</p>
+
+						<p>And it is able to handle everything from the Underground through the Dangleway to hail and ride buses. But that means there's lots of stop options and different timing points and other stuff that either aren't relevant or result in the same things coming up again and again for the tube.</p>
+
+						<p>Plus it's XML, so it's somewhat superflous, but ultimately we have to be thankful that the data is available in a machine readable format like this. And in reality - XML might be the right format, however much we generally hate it as developers.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Believe in timetables</h2>
+
+					<aside class="notes">
+						<p>So it's a simple message and it comes from the heart</p>
+
+						<p>Believe in timetables</p>
+
+						<p>Well that's the place to start</p>
+
+						<p>Because we have to believe in these timetables and that the network is right and will run to time. We have no other way of completing the tube challenge. At the end of the day, there are minutes here and there that you lose and gain, but the big losses are where you don't hit the timetable on a 2 or 4 train per hour connection like those to Amersham and Chesham.</p>
+
+						<p>But if we're taking the timetables to be correct, surely this means we can re-route while we're on the move?</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Fixing on the fly</h2>
+
+					<aside class="notes">
+						<p>In the past, this has always been a simple process, partly because there's usually one line or station gone down, and it means a minor re-route to get round that problem.</p>
+
+						<p>But in a Walk the Tube event a couple of years ago everything went very wrong, thanks to every single line having a problem on it. And not minor problems, there was at least four major incidents that day causing a huge knock effect to the service.</p>
+
+						<p>Now to be fair, on a real event we would have probably given up at that point instead of re-routing. But it was a charity event and the show must go on!</p>
+
+						<p>Therefore... we sat on the Central line coming back down from Epping and I rewrote the code on my iPad, using vim through an SSH app while our superstar route planning friend Chris wrote a new route. Just before we dived back underground at Mile End, we managed to run the new route against the new code, and we had our plan for the rest of the day.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Why can't it do this for me?</h2>
+					<img src="clippy.png">
+
+					<aside class="notes">
+						<p>But at the moment there's still a huge manual part to this process. A human still has to come up with a viable route. All we can currently do is work out how quickly that route can be run.</p>
+
+						<p>But that's an order of magnitude faster than it used to be - I can work out the time for a route in a few seconds on a standard cloud box. It used to take half an hour for each route to be computed manually.</p>
+
+						<p>It would be even better in the future if I can just leave it to do this for me.</p>
+
+						<p>And that's where we basically come full circle. How can we make it come up with the quickest route for us?</p>
+
+						<p>Where is the best station to start? How can we combine all the knowledge I've just described into a program that runs in a sensible amount of time?</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>I probably could have done it manually by now</h2>
+
+					<aside class="notes">
+						<p>To be honest, if I'd written an iterative searcher and left it running for the last few years, I'd probably now have an answer.</p>
+
+						<p>Currently I'm looking at a couple of options - machine learning of how the network operates to see how different the timetable is to reality, and some form of integer linear programming to solve the routing aspect.</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Our record</h2>
+					<p>16:20:27</p>
+
+					<h2>Planned time for above record</h2>
+					<p>16:02ish</p>
+
+					<aside class="notes">
+						<p>The critical point is - this challenge has now got to the point where we're hitting the limit of how fast it could actually be done.</p>
+
+						<p>When we broke the world record in 2013, there was n number of routes that would have resulted in the same time. Indeed our route on paper was significantly faster than we actually ran. But as the record time gets smaller, n is getting closer to zero, and it starts to rely more on luck.</p>
+
+						<p>But there have also been improvements to the network - we've seen major work on the signalling on the Northern and Victoria lines for example, which mean that if we re-ran that same route today, we'd end up a good ten minutes earlier.</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Current record</h2>
+					<p>15:45:38</p>
+
+					<h2>Lower limit</h2>
+					<p>15:30:00?</p>
+
+					<aside class="notes">
+						<p>I don't know what the absolute minimum time for traversing the network is - my guess is that it is somewhere around the 15:30 mark.</p>
+
+						<p>I stress that's a complete guess, based on having looked at manual routes we've created, and assuming a computer might be able to route a few interchanges faster and with a little less waste.</p>
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Are computers really better than humans?</h2>
+
+					<aside class="notes">
+						<p>But I don't know. I'm constantly amazed at how our route planner Chris is able to come up with such fast routes. And I have no desire at all to put him out of a job but... well, I'm a programmer, and programmers like to solve problems with computers.</p>
+
+						<p>I'd love to have a computer spit out a route that breaks the record. I know it's not impossible! Aside from the fact there are 270 potential start points, it shouldn't be that far removed from a delivery routing system, surely?</p>
+
+						<p>But currently it seems like I've got a lot of challenges to solve before I can get to that point.</p>
+					</aside>
+				</section>
+
+				<section>
+					<h2 style="padding: 1em;">kirk@krn.me.uk</h2>
+
+					<h2 style="padding: 1em;"><span style="font-family: FontAwesome;"></span> @geofftech</h2>
+
+					<h2 style="padding: 1em;">geofftech.co.uk</h2>
+
+					<aside class="notes">
+						<p>As I said at the beginning, I'm more than happy to listen to any ideas or thoughts people have - my details are up there, as are Geoff's, and sometimes we even talk about non-train stuff!</p>
+
+						<p>But for now I'm going to ask Geoff to come back up and we'll be very happy to take some questions!</p>
+					</aside>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: false,
+				history: true,
+				center: true,
+
+				transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
